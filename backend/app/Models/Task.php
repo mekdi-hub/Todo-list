@@ -18,6 +18,7 @@ class Task extends Model
         'due_time',
     ];
     public function user(){
-        return $this->hasmany(User::class);
+        return $this->belongsto(User::class);
     }
+   
 }

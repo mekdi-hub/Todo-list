@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use  App\Models\Task;
 class Taskcontroller extends Controller
 {
     /**
@@ -12,7 +12,8 @@ class Taskcontroller extends Controller
      */
     public function index()
     {
-        //
+       $tasks=Task::all();
+       return $tasks;
     }
 
     /**
@@ -20,7 +21,19 @@ class Taskcontroller extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $task= Task::Create([
+       'title'=>$request->title,
+        'description'=>$request->description,
+        'status'=>$request->status,
+        'due_date'=>$request->due_date,
+        'due_time'=>$request->due_time,
+        'priority'=>$request->priority,
+        ]);
+        return response ()->json([
+
+            'message'=>'task created successfully',
+           
+        ]);
     }
 
     /**
@@ -28,7 +41,9 @@ class Taskcontroller extends Controller
      */
     public function show(string $id)
     {
-        //
+       $task=Task::findorfail($id);
+
+       return $task;
     }
 
     /**
@@ -36,7 +51,25 @@ class Taskcontroller extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $task=Task::findorfail($id);
+        $task->update([
+
+         'title'=>$request->title,
+        'description'=>$request->description,
+        'status'=>$request->status,
+        'due_date'=>$request->due_date,
+        'due_time'=>$request->due_time,
+        'priority'=>$request->priority,
+
+        ]);
+       
+        return response()->json([
+
+            'message'=>'task updated successfully',
+            'task'=>$task
+        ]);
+
+      
     }
 
     /**
@@ -44,6 +77,12 @@ class Taskcontroller extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $task=Task::findorfail($id);
+        $task->delete();
+
+        return response()->json([
+
+            'message'=>'task deleted successfully'
+        ]);
     }
 }
