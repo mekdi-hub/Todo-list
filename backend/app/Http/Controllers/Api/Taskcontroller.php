@@ -12,8 +12,55 @@ class Taskcontroller extends Controller
      */
     public function index(Request $request)
     {
-       $tasks= $request->user()->tasks()->get();
-       return $tasks;
+       $query= $request->user()->tasks()->with('category');
+
+       if ($request->has('search'))
+    {
+        $query->where(
+            'title',
+            'like',
+            '%' . $request->input('search') . '%'
+        );
+    }
+       if ($request->has('status'))
+        {
+           $query->where('status',$request->input('status'));
+        }
+      
+       if($request ->has('priority'))
+        {
+         $query->where('priority',$request->input('priority'));
+        
+        }
+
+      
+if ($request->has('sort')) {
+
+    if ($request->sort == 'latest') {
+
+        $query->orderBy('created_at','desc');
+
+    }
+
+    if ($request->sort == 'oldest') {
+
+        $query->orderBy('created_at','asc');
+
+    }
+
+    if ($request->sort == 'priority') {
+
+  $query->orderByRaw("
+                    CASE
+                    WHEN priority='High' THEN 1
+                    WHEN priority='Medium' THEN 2
+                    WHEN priority='Low' THEN 3
+                    END
+                ");
+    }
+}
+        $tasks= $query->paginate(10);
+         return TaskResource::collection($tasks);
     }
 
     /**
@@ -35,7 +82,7 @@ class Taskcontroller extends Controller
         return response ()->json([
 
             'message'=>'task created successfully',
-            'task'=>$task
+           'task'=>new TaskResource($task)
         ]);
     }
 
@@ -67,15 +114,29 @@ class Taskcontroller extends Controller
 
         ]);
        $task->update($validated);
-        return response()->json([
-
-            'message'=>'task updated successfully',
-            'task'=>$task
-        ]);
+       return new TaskResource($task);
 
       
     }
+  public function complete(Request $request, string $id)
+{
+    $task = $request->user()
+                    ->tasks()
+                    ->findOrFail($id);
 
+
+    $task->update([
+        'status'=>'Completed'
+    ]);
+
+
+    return response()->json([
+
+        'message'=>'Task completed successfully',
+        'task'=>new TaskResource($task)
+
+    ]);
+}
     /**
      * Remove the specified resource from storage.
      */

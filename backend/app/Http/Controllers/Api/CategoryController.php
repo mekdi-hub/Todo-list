@@ -16,7 +16,7 @@ class CategoryController extends Controller
        ->user()
        ->categories()
        ->get();
-       return $categories;
+       return CategoryResource::collection($categories);
     }
     
 
@@ -34,7 +34,7 @@ class CategoryController extends Controller
         $categories=$request->user()->categories()->create($validated);
         return response()->json([
             'message'=>'Category created successfully',
-            'category'=>$categories
+            'category'=>new CategoryResource($categories)
         ],201);
     }
 
@@ -45,7 +45,7 @@ class CategoryController extends Controller
     {
         $categories=$request->user()->categories()->findorfail($id);
 
-       return $categories;
+       return new CategoryResource($categories);
     }
 
     /**
@@ -68,7 +68,7 @@ class CategoryController extends Controller
         return response()->json([
 
             'message'=>'Category updated successfully',
-            'category'=>$categories
+            'category'=> new CategoryResource($categories)
         ]);
     }
 
