@@ -26,7 +26,7 @@ const chartData = computed(() => ({
 </script>
 
 <template>
-
+<Pie />
 <div>
   Completed:
   {{ props.data.completed_tasks }}
