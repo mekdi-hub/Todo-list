@@ -21,9 +21,9 @@ class Authcontroller extends Controller
     ]);
     $token=$user->createToken('auth-token')->plainTextToken;
     return response()->json([
-'message'=>'registered successfully',
-'user'=>$user,
-'token'=>$token,
+        'message'=>'registered successfully',
+        'user'=>$user,
+        'token'=>$token,
     ],201);
  }
 
@@ -41,14 +41,16 @@ class Authcontroller extends Controller
     }
   $token=$user->createToken('auth-token')->plainTextToken;
     return response()->json([
-'message'=>'logged in  successfully',
-'user'=>$user,
+        'message'=>'logged in  successfully',
+        'user'=>$user,
 'token'=>$token,
     ],200);
 
  }
  public function logout(Request $request){
-          $token=$request->user()->currentAccessToken()->delete();
+
+          $token=$request->user()
+          ->currentAccessToken()->delete();
     return response()->json([
         'message'=>'logged out successfully'
     ],200);

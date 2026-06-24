@@ -13,7 +13,7 @@ TODO
 
 <style scoped>
 .footer{
-background-color: darkgreen;
+background-color: #064e3b;
 height:150px;
 display:flex;
 justify-content: space-between;

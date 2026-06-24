@@ -9,8 +9,9 @@ class Category extends Model
 {
    use HasFactory;
    protected $fillable=[
-
-    'name','description','image'
+    'name',
+    'description',
+    'image'
    ];
 
 
@@ -20,7 +21,4 @@ class Category extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
-
- 
-
 }

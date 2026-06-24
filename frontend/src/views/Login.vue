@@ -1,6 +1,6 @@
 <script setup>
 import Navbar from '../components/layout/Navbar.vue'
-import Basebutton from '../components/ui/Basebutton.vue'
+import BaseButton from '../components/ui/BaseButton.vue'
 import BaseInput from '../components/ui/BaseInput.vue'
 import Footer from '../components/layout/Footer.vue'
 import BaseCard from '../components/ui/BaseCard.vue'
@@ -33,13 +33,13 @@ localStorage.setItem(
   JSON.stringify(response.data.user)
 )
 
-message.value = "Login successful 👏👏"
+message.value = "Loggedin successfully 👏👏"
 router.push('/dashboard')
 }
 catch(error){
 console.log(error.response.data)
- router.push('/dashboard')
- message.value = 'Login failed'
+
+ message.value = 'Login failed Check your email and password.'
 }
 
   
@@ -50,12 +50,12 @@ console.log(error.response.data)
 
 <Navbar />
 
-<div >
+<div  class="auth-page">
 <div class="card">
 <h1>Welcome Back</h1>
-<BaseInput placeholder="email" v-model="email" type="email" />
+<BaseInput placeholder="Email" v-model="email" type="email" />
 <BaseInput placeholder="Password" v-model="password" type="password" />
-<Basebutton @click="login">Login</BaseButton>
+<BaseButton @click="login">Login</BaseButton>
 <p>{{ message }}</p>
 </div>
 </div>
@@ -64,38 +64,42 @@ console.log(error.response.data)
 </template>
 
 <style scoped>
- .card{
-  background-color:white;
+
+
+.auth-page{
+  min-height: calc(100vh - 120px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#f5f7f5;
+}
+
+
+.card{
+  width:400px;
+  background:white;
+  padding:35px;
+  border-radius:16px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.12);
   display:flex;
   flex-direction:column;
-  margin:100px;
-  align-items:center;
-box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-border-radius:10px;
-padding :20px;
-  }
-@media (max-width: 768px) {
-  .hero-section {
-    padding: 1rem 1.5rem 1.5rem;
-  }
-  
-  .hero-image img {
-    max-width: 16rem;
-  }
-  
-  .hero-title {
-    font-size: 1.875rem;
-    margin-bottom: 0.75rem;
-  }
-  
-  .hero-description {
-    font-size: 0.9375rem;
-    margin-bottom: 1.25rem;
-  }
-  
-  .button-group {
-    margin-bottom: 1.5rem;
-  }
- 
+  gap:18px;
 }
+
+
+h1{
+  text-align:center;
+  color:#064e3b;
+  font-size:32px;
+  font-weight:bold;
+}
+
+
+p{
+  text-align:center;
+  color:#555;
+}
+
+
+
 </style>

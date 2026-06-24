@@ -3,7 +3,7 @@ import Landing from '../views/Landing.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
-
+import Tasks from '../views/Tasks.vue'
 const routes = [
   {
     path: '/',
@@ -25,6 +25,11 @@ const routes = [
     name: 'Dashboard',
     component: Dashboard,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/tasks',
+    name: 'Tasks',
+    component: Tasks
   }
 
 ]

@@ -5,8 +5,7 @@
 </template>
 <style scoped>
 .btn{
-
-background-color:darkgreen;
+background-color:#064e3b;
 color:white;
 border:none;
 padding:10px 20px;
@@ -18,7 +17,7 @@ transition: 0.3s;
 margin :10px;
 }
 .btn:hover{
-background-color:green;
+background-color:#065f46
 }
 
 </style>

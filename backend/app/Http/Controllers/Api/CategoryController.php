@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 use App\Models\Category;
+use App\Http\Resources\CategoryResource;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -75,7 +76,7 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
         $categories=$request->user()->categories()->findorfail($id);
         $categories->delete();

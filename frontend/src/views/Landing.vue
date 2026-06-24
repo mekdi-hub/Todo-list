@@ -1,13 +1,22 @@
 <script setup>
+import { ref, onMounted } from 'vue'
 import BaseButton from '../components/ui/BaseButton.vue'
 import Navbar from '../components/layout/Navbar.vue'
 import heroImage from '../assets/landing.png'
 import Footer from '../components/layout/Footer.vue'
+const isLoggedIn = ref(false)
+onMounted(() => {
+ const token = localStorage.getItem('token')
+ if(token){
+   isLoggedIn.value = true
+ }
+
+})
 </script>
 
 <template>
   <div class="landing-page">
-    <Navbar />
+    <Navbar/>
 
     <section class="hero-section">
       <div class="hero-container">
@@ -24,18 +33,20 @@ import Footer from '../components/layout/Footer.vue'
           Manage your tasks, deadlines, priorities and categories in one beautiful workspace designed to improve your productivity.
         </p>
 
-        <div class="button-group">
+        <div v-if="!isLoggedIn" class="button-group">
           <router-link to="/register" class="btn btn-primary">
           <BaseButton>
             Get Started
             </BaseButton>
           </router-link>
           <router-link to="/login" class="btn btn-secondary">
-         
             Login
-          
           </router-link>
         </div>
+         <div v-else class="nav-links">
+         <BaseButton>
+         Create Tasks</BaseButton>
+         </div>
       </div>
     </section>
   </div>

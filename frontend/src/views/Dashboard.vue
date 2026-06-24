@@ -6,7 +6,7 @@ import api from '../api/axios'
 import TaskCard from '../components/task/TaskCard.vue'
 import TaskForm from '../components/task/TaskForm.vue'
 const user = JSON.parse(localStorage.getItem('user'))
-const data =ref ('')
+const data = ref({})
 const tasks = ref([
     {
         id:1,
@@ -18,7 +18,9 @@ const tasks = ref([
 const dashboard = async() => {
  try{
   const response = await api.get('/dashboard')
+  console.log(response.data)
   data.value = response.data
+  
   
  }
  catch(error)
@@ -34,7 +36,9 @@ onMounted(()=>{
 </script>
 
 <template>
+
 <Navbar/>
+
   <div class ="dashboard">
   <h1> Dashboard </h1>
   <p>Welcome Back, {{ user.name }} 👋</p>
@@ -73,8 +77,11 @@ onMounted(()=>{
   </div>
   </div>
 
-  <div class="dashboards" v-if="data">
-  <TaskChart :data="data"/>
+  <div class="dashboards" >
+ <TaskChart 
+  v-if="data.total_tasks !== undefined"
+  :data="data"
+/>
   </div>
 <TaskForm/>
 
@@ -95,7 +102,7 @@ font-size: 20px;
 
 }
 h1{
-  color:darkgreen;
+  color:#064e3b;
   font-size: 36px;
   font-weight:bold;
 }
@@ -120,7 +127,7 @@ text-align: center;
 .card h3{
 margin: 0 0 10px 0;
 font-weight:bold;
-color: darkgreen;
+color:#064e3b;
 
 }
 .card p{

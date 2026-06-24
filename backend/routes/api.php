@@ -12,8 +12,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/logout',[AuthController::class,'logout']);
     Route::get('/dashboard',[DashboardController::class,'index']);
     Route::apiResource('/tasks',TaskController::class);
-    Route::patch('/tasks/{id}/complete',[TaskController::class,'complete']
-);
+    Route::patch('/tasks/{id}/complete',[TaskController::class,'complete']);
     Route::apiResource('/categories', CategoryController::class);
 
 });

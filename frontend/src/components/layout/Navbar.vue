@@ -1,53 +1,97 @@
-<script>
-import BaseButton from '../ui/BaseButton.vue'
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+const isLoggedIn = ref(false)
+
+const router = useRouter()
+
+onMounted(() => {
+ const token = localStorage.getItem('token')
+ if(token){
+   isLoggedIn.value = true
+ }
+
+})
+const logout = () => {
+localStorage.removeItem('token')
+localStorage.removeItem('user')
+isLoggedIn.value = false
+router.push('/login')
+
+}
 </script>
 
 <template>
 <nav class="navbar">
   <div class="navibar">
-    <h1>TODO</h1>
+    <h1 class="logo"><router-link to="/">TODO</router-link></h1>
   </div>
-  <div>
- 
-    <router-link to="/login" class="nav-link"> <BaseButton>Login </BaseButton></router-link>
-   <router-link to="/Register" class="nav-link"> <BaseButton>Register </BaseButton></router-link>
+
+  <div v-if="!isLoggedIn" class="nav-links">
+    <router-link to="/login" class="nav-link">Login </router-link>
+   <router-link to="/Register" class="nav-link"> Register </router-link>
   </div>
+  <div v-else class="nav-links">
+ <router-link to="/dashboard" class="nav-link">
+Dashboard
+</router-link>
+ <router-link to="/tasks" class="nav-link">
+Tasks
+</router-link>
+ <button @click="logout" class="auth-button">
+Logout
+</button>
+</div>
   </nav>
 </template>
 <style scoped>
+
 .navbar{
-    border-radius:5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f0f0f0;
-    padding: 20px 50px;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  }
-  .nav-link {
-  margin-left: 20px;
-  text-decoration: none;
-  color: white;
-  background-color:darkgreen;
-  padding:8px 15px;
-  border-radius:5px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:white;
+  padding:18px 50px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.08);
+  position:sticky;
+  top:0;
+
+  z-index:100;
 }
-.nav-butt-link {
-  margin-left: 20px;
-  text-decoration: none;
-  color: green;
-  font-weight: 600;
+.logo{
+  color:#064e3b;
+  font-size:25px;
+  font-weight:800;
 }
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+.nav-link{
+
+  text-decoration:none;
+  color:#064e3b;
+  font-weight:600;
+  padding:8px 12px;
+  border-radius:8px;
+  transition:0.3s;
+}
+
+
 .nav-link:hover{
-      color: #007bff; 
-      text-decoration: underline;
-      
+  background:#eefdf5;
+  color:#047857;
+
 }
-h1{
-color:darkgreen;
-font-weight:bold;
-font-style:sans-serif;
-font-size:20px;
+.auth-button{
+  background:#064e3b;
+  color:white;
+  padding:10px 20px;
+  border-radius:8px;
 }
+.auth-button:hover{
+ background:#047857;
+}
+
 </style>
