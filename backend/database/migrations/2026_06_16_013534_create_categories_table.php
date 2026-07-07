@@ -11,14 +11,15 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
+
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
                 ->constrained()
                 ->cascadeOnDelete();
-                $table->string('name');
-            $table->text('description');
+            $table->string('name');
+            $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
         });

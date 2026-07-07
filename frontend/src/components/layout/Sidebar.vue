@@ -1,222 +1,155 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { ref } from "vue";
+import Swal from "sweetalert2";
+import {
+  LayoutDashboard,
+  ListTodo,
+  CheckSquare,
+  Folder,
+  LogOut,
+  Menu,
+} from "lucide-vue-next";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const isOpen = ref(false);
+const toggleSidebar = () => {
+  isOpen.value = !isOpen.value;
+};
+const goTo = (path) => {
+  router.push(path);
+};
+const logout = async () => {
+  const result = await Swal.fire({
+    title: "Logout?",
+    text: "Are you sure you want to logout?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Logout",
+    cancelButtonText: "Cancel",
+  });
 
-const props = defineProps({
-  currentView: String,
-  user: Object,
-  isOpen: Boolean
-})
-
-const emit = defineEmits(['setView', 'logout', 'close'])
+  if (!result.isConfirmed) return;
+  localStorage.removeItem("token");
+  router.push("/login");
+};
 </script>
-
 <template>
-  <aside class="sidebar" :class="{ 'sidebar-open': isOpen }">
-    <div class="sidebar-header">
-      <h1 class="sidebar-logo">TODO</h1>
-      <button @click="emit('close')" class="sidebar-close">×</button>
+  <button class="menu-btn" @click="toggleSidebar"><Menu :size="24" /></button>
+
+  <div v-if="isOpen" class="overlay" @click="toggleSidebar"></div>
+  <aside class="sidebar" :class="{ open: isOpen }">
+    <div class="logo">
+      <ListTodo :size="24" /><router-link to="/">TODO</router-link>
     </div>
-    
-    <nav class="sidebar-nav">
-      <button 
-        @click="emit('setView', 'dashboard')" 
-        class="nav-item"
-        :class="{ active: currentView === 'dashboard' }"
-      >
-        <span>Dashboard</span>
+    <nav>
+      <button @click="goTo('/dashboard')">
+        <LayoutDashboard :size="20" /> Dashboard
       </button>
-      
-      <button 
-        @click="emit('setView', 'tasks')" 
-        class="nav-item"
-        :class="{ active: currentView === 'tasks' }"
-      >
-        <span>Tasks</span>
-      </button>
-      
-      <button 
-        @click="emit('setView', 'categories')" 
-        class="nav-item"
-        :class="{ active: currentView === 'categories' }"
-      >
-        <span>Categories</span>
+
+      <button @click="goTo('/tasks')"><CheckSquare :size="20" /> Tasks</button>
+      <button @click="goTo('/categories')">
+        <Folder :size="20" /> Categories
       </button>
     </nav>
-    
-    <div class="sidebar-footer">
-      <div class="user-info">
-        <div class="user-avatar">{{ user?.name?.charAt(0).toUpperCase() }}</div>
-        <div class="user-details">
-          <div class="user-name">{{ user?.name }}</div>
-          <div class="user-email">{{ user?.email }}</div>
-        </div>
-      </div>
-      <button @click="emit('logout')" class="btn btn-outline">Logout</button>
-    </div>
+    <button class="logout" @click="logout"><LogOut :size="20" /> Logout</button>
   </aside>
 </template>
-
 <style scoped>
 .sidebar {
   width: 260px;
+  height: 100vh;
   background: white;
-  border-right: 1px solid #e5e7eb;
+  color: #064e3b;
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   position: fixed;
-  height: 100vh;
   left: 0;
   top: 0;
-  z-index: 200;
-  transition: transform 0.3s;
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.sidebar-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+.logo {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 10px;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 40px;
 }
 
-.sidebar-logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: linear-gradient(to right, #16a34a, #15803d);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0;
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.sidebar-close {
+button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+  padding: 14px;
+
+  background: none;
+  border: none;
+  border-radius: 10px;
+
+  color: #064e3b;
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #eefdf5;
+  border-left: 4px solid #064e3b;
+}
+
+.logout {
+  margin-top: auto;
+}
+
+/* Hamburger button */
+.menu-btn {
   display: none;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: #6b7280;
-  cursor: pointer;
-  padding: 0;
-  width: 2rem;
-  height: 2rem;
-}
-
-.sidebar-nav {
-  flex: 1;
-  padding: 1rem 0;
-  overflow-y: auto;
-}
-
-.nav-item {
-  width: 100%;
-  padding: 0.875rem 1.5rem;
-  display: flex;
-  align-items: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #6b7280;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  transition: all 0.2s;
-  text-align: left;
-  border-left: 3px solid transparent;
-}
-
-.nav-item:hover {
-  background: #f9fafb;
-  color: #16a34a;
-}
-
-.nav-item.active {
-  background: #f0fdf4;
-  color: #16a34a;
-  border-left-color: #16a34a;
-}
-
-.sidebar-footer {
-  padding: 1.5rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.user-avatar {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #16a34a, #15803d);
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: #064e3b;
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1rem;
+  width: auto;
+  padding: 10px 14px;
+  border-radius: 8px;
+  z-index: 1100;
+  font-size: 22px;
 }
 
-.user-details {
-  flex: 1;
-  min-width: 0;
+/* Overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
 }
 
-.user-name {
-  font-weight: 600;
-  color: #111827;
-  font-size: 0.875rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.user-email {
-  font-size: 0.75rem;
-  color: #6b7280;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.btn {
-  width: 100%;
-  padding: 0.5rem 1rem;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  transition: all 0.3s;
-  display: inline-block;
-  cursor: pointer;
-  border: none;
-  font-size: 0.875rem;
-}
-
-.btn-outline {
-  color: #16a34a;
-  border: 2px solid #16a34a;
-  background-color: white;
-}
-
-.btn-outline:hover {
-  background-color: #f0fdf4;
-}
-
+/* Mobile */
 @media (max-width: 768px) {
+  .menu-btn {
+    display: block;
+  }
+
   .sidebar {
     transform: translateX(-100%);
   }
-  
-  .sidebar.sidebar-open {
+
+  .sidebar.open {
     transform: translateX(0);
-  }
-  
-  .sidebar-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 }
 </style>

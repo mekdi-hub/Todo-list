@@ -1,0 +1,37 @@
+/* SUCCESS */
+.Vue-Toastification__toast--success {
+    background: #064e3b !important;
+    color: white;
+    border-left: 5px solid #10b981;
+}
+
+/* ERROR */
+.Vue-Toastification__toast--error {
+    background: #991b1b !important;
+    color: white;
+    border-left: 5px solid #ef4444;
+}
+
+/* WARNING */
+.Vue-Toastification__toast--warning {
+    background: #92400e !important;
+    color: white;
+    border-left: 5px solid #fbbf24;
+}
+
+/* INFO */
+.Vue-Toastification__toast--info {
+    background: #1e3a8a !important;
+    color: white;
+    border-left: 5px solid #60a5fa;
+}
+
+/* Progress bar */
+.Vue-Toastification__progress-bar {
+    background: rgba(255,255,255,.8);
+}
+
+/* Close button */
+.Vue-Toastification__close-button {
+    color: white;
+}

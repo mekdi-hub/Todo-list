@@ -1,22 +1,21 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import BaseButton from '../components/ui/BaseButton.vue'
-import Navbar from '../components/layout/Navbar.vue'
-import heroImage from '../assets/landing.png'
-import Footer from '../components/layout/Footer.vue'
-const isLoggedIn = ref(false)
+import { ref, onMounted } from "vue";
+import BaseButton from "../components/ui/BaseButton.vue";
+import Navbar from "../components/layout/Navbar.vue";
+import heroImage from "../assets/landing.png";
+import Footer from "../components/layout/Footer.vue";
+const isLoggedIn = ref(false);
 onMounted(() => {
- const token = localStorage.getItem('token')
- if(token){
-   isLoggedIn.value = true
- }
-
-})
+  const token = localStorage.getItem("token");
+  if (token) {
+    isLoggedIn.value = true;
+  }
+});
 </script>
 
 <template>
   <div class="landing-page">
-    <Navbar/>
+    <Navbar />
 
     <section class="hero-section">
       <div class="hero-container">
@@ -30,30 +29,29 @@ onMounted(() => {
         </h1>
 
         <p class="hero-description">
-          Manage your tasks, deadlines, priorities and categories in one beautiful workspace designed to improve your productivity.
+          Manage your tasks, deadlines, priorities and categories in one
+          beautiful workspace designed to improve your productivity.
         </p>
 
         <div v-if="!isLoggedIn" class="button-group">
           <router-link to="/register" class="btn btn-primary">
-          <BaseButton>
-            Get Started
-            </BaseButton>
+            <BaseButton> Get Started </BaseButton>
           </router-link>
           <router-link to="/login" class="btn btn-secondary">
             Login
           </router-link>
         </div>
-         <div v-else class="nav-links">
-         <BaseButton>
-         Create Tasks</BaseButton>
-         </div>
+        <div v-else class="nav-links">
+          <BaseButton
+            ><router-link to="/tasks"> Create Tasks</router-link></BaseButton
+          >
+        </div>
       </div>
     </section>
   </div>
   <div>
-  <Footer/>
+    <Footer />
   </div>
-
 </template>
 
 <style scoped>
@@ -111,39 +109,39 @@ onMounted(() => {
   margin-left: auto;
   margin-right: auto;
 }
-.btn-secondary{
-border:solid;
-padding:10px 20px;
-border-color:darkgreen;
-border-radius:5px;
-color:darkgreen;
-font-weight:bold;
+.btn-secondary {
+  border: solid;
+  padding: 10px 20px;
+  border-color: darkgreen;
+  border-radius: 5px;
+  color: darkgreen;
+  font-weight: bold;
 }
-.btn-secondary:hover{
-background-color:darkgreen;
-color:white;
-transition: 0.3s;
+.btn-secondary:hover {
+  background-color: darkgreen;
+  color: white;
+  transition: 0.3s;
 }
 /* Responsive */
 @media (max-width: 768px) {
   .hero-section {
     padding: 1rem 1.5rem 1.5rem;
   }
-  
+
   .hero-image img {
     max-width: 16rem;
   }
-  
+
   .hero-title {
     font-size: 1.875rem;
     margin-bottom: 0.75rem;
   }
-  
+
   .hero-description {
     font-size: 0.9375rem;
     margin-bottom: 1.25rem;
   }
-  
+
   .button-group {
     margin-bottom: 1.5rem;
   }

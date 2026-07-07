@@ -4,7 +4,15 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Tasks from '../views/Tasks.vue'
-const routes = [
+import CreateTask from '../views/CreateTask.vue'
+import CreateCategories from '../views/CreateCategories.vue'
+import DashboardLayout from '../components/layout/DashboardLayout.vue'
+import EditTask from '../views/EditTask.vue'
+import Categories from '../views/Categories.vue'
+import EditCategories from '../views/EditCategories.vue'
+const router = createRouter({
+  history: createWebHistory(),
+  routes:[
   {
     path: '/',
     name: 'Landing',
@@ -21,23 +29,52 @@ const routes = [
     component: Register
   },
   {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/tasks',
-    name: 'Tasks',
-    component: Tasks
-  }
+     path:'/',
+     component:DashboardLayout,
+children:[
 
+{
+path: 'dashboard',
+name: 'Dashboard',
+component: Dashboard,
+meta: { requiresAuth: true }
+},
+{
+path: 'tasks',
+name: 'Tasks',
+component: Tasks
+},
+{
+path:'tasks/create',
+name:'CreateTask',
+component: CreateTask
+},
+{
+    path:'tasks/edit/:id',
+    name:'EditTask',
+    component:EditTask
+},
+{
+path: 'categories',
+name: 'Categories',
+component: Categories
+},
+{
+path:'categories/create',
+name:'CreateCategories',
+component: CreateCategories
+},
+
+{
+    path:'categories/edit/:id',
+    name:'EditCategories',
+    component: EditCategories
+}
+
+]}
 ]
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes
 })
+
 
 
 

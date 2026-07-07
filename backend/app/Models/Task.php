@@ -4,24 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Task extends Model
 
 {
+
     use HasFactory;
-   
+
     protected $fillable = [
         'category_id',
-        'title', 
-        'description', 
+        'title',
+        'description',
         'priority',
         'status',
         'due_date',
         'due_time',
     ];
-    public function user(){
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-   public function category(){
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 }

@@ -14,55 +14,49 @@ class Taskcontroller extends Controller
      */
     public function index(Request $request)
     {
-       $query= $request->user()->tasks()->with('category');
+        $query = $request->user()->tasks()->with('category');
 
-       if ($request->has('search'))
-    {
-        $query->where(
-            'title',
-            'like',
-            '%' . $request->input('search') . '%'
-        );
-    }
-       if ($request->has('status'))
-        {
-           $query->where('status',$request->input('status'));
+        if ($request->filled('search')) {
+            $query->where(
+                'title',
+                'like',
+                '%' . $request->input('search') . '%'
+            );
         }
-      
-       if($request ->has('priority'))
-        {
-         $query->where('priority',$request->input('priority'));
-        
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
         }
 
-      
-if ($request->has('sort')) {
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->input('priority'));
+        }
 
-    if ($request->sort == 'latest') {
 
-        $query->orderBy('created_at','desc');
+        if ($request->filled('sort')) {
 
-    }
+            if ($request->sort == 'latest') {
 
-    if ($request->sort == 'oldest') {
+                $query->orderBy('created_at', 'desc');
+            }
 
-        $query->orderBy('created_at','asc');
+            if ($request->sort == 'oldest') {
 
-    }
+                $query->orderBy('created_at', 'asc');
+            }
 
-    if ($request->sort == 'priority') {
+            if ($request->sort == 'priority') {
 
-  $query->orderByRaw("
+                $query->orderByRaw("
                     CASE
                     WHEN priority='High' THEN 1
                     WHEN priority='Medium' THEN 2
                     WHEN priority='Low' THEN 3
                     END
                 ");
-    }
-}
-        $tasks= $query->paginate(10);
-         return TaskResource::collection($tasks);
+            }
+        }
+        $tasks = $query->paginate(10);
+        return TaskResource::collection($tasks);
     }
 
     /**
@@ -70,32 +64,32 @@ if ($request->has('sort')) {
      */
     public function store(Request $request)
     {
-     $validated= $request->validate([
-        'category_id'=>'nullable|exists:categories,id',
-       'title'=>'required|string',
-        'description'=>'nullable|string',
-        'status'=>'required|string',
-        'due_date'=>'required|date',
-        'due_time'=>'nullable|string',
-        'priority'=>'required|string',
-        
-        ]);
-        $task=$request->user()->tasks()->create($validated);
-        return response ()->json([
+        $validated = $request->validate([
+            'category_id' => 'nullable|exists:categories,id',
+            'title' => 'required|string',
+            'description' => 'nullable|string',
+            'status' => 'required|in:Pending,In progress,Completed',
+            'due_date' => 'required|date',
+            'due_time' => 'nullable|string',
+            'priority' => 'required|in:Low,Medium,High',
 
-            'message'=>'task created successfully',
-           'task'=>new TaskResource($task)
+        ]);
+        $task = $request->user()->tasks()->create($validated);
+        return response()->json([
+
+            'message' => 'task created successfully',
+            'task' => new TaskResource($task)
         ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request,string $id)
+    public function show(Request $request, string $id)
     {
-       $task=$request->user()->tasks()->findorfail($id);
+        $task = $request->user()->tasks()->findorfail($id);
 
-       return $task;
+        return $task;
     }
 
     /**
@@ -103,11 +97,11 @@ if ($request->has('sort')) {
      */
     public function update(Request $request, string $id)
     {
-        $task=$request->user()->tasks()->findorfail($id);
+        $task = $request->user()->tasks()->findorfail($id);
 
-        $validated=$request->validate([
+        $validated = $request->validate([
 
-           'title' => 'required|string',
+            'title' => 'required|string',
             'description' => 'nullable|string',
             'priority' => 'required|string',
             'status' => 'required|string',
@@ -115,41 +109,59 @@ if ($request->has('sort')) {
             'due_time' => 'nullable',
 
         ]);
-       $task->update($validated);
-       return new TaskResource($task);
-
-      
+        $task->update($validated);
+        return new TaskResource($task);
     }
-  public function complete(Request $request, string $id)
-{
-    $task = $request->user()
-                    ->tasks()
-                    ->findOrFail($id);
+    public function complete(Request $request, string $id)
+    {
+        $task = $request->user()
+            ->tasks()
+            ->findOrFail($id);
 
 
-    $task->update([
-        'status'=>'Completed'
-    ]);
+        $task->update([
+            'status' => 'Completed'
+        ]);
 
 
-    return response()->json([
+        return response()->json([
 
-        'message'=>'Task completed successfully',
-        'task'=>new TaskResource($task)
+            'message' => 'Task completed successfully',
+            'task' => new TaskResource($task)
 
-    ]);
-}
+        ]);
+    }
+
+    public function updateStatus(Request $request, string $id)
+    {
+        $task = $request->user()
+            ->tasks()
+            ->findOrFail($id);
+
+        $newStatus = $task->status === 'Completed'
+            ? 'Pending'
+            : 'Completed';
+
+        $task->update([
+            'status' => $newStatus
+        ]);
+
+        return response()->json([
+            'message' => 'Task status updated successfully.',
+            'task' => new TaskResource($task)
+        ]);
+    }
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request,string $id)
+    public function destroy(Request $request, string $id)
     {
-        $task=$request->user()->tasks()->findorfail($id);
+        $task = $request->user()->tasks()->findorfail($id);
         $task->delete();
 
         return response()->json([
 
-            'message'=>'task deleted successfully'
+            'message' => 'task deleted successfully'
         ]);
     }
 }
